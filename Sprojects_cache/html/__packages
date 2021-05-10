@@ -3,3 +3,17 @@ ggplot2
 plyr
 RColorBrewer
 scales
+readxl
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+carData
+car
+ggthemes
+lubridate
+DT

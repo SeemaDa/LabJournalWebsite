@@ -347,82 +347,278 @@ div.tocify {
 <div id="project-1" class="section level1">
 <h1>Project 1</h1>
 <p>Use the provided data at the website <a href="https://ourworldindata.org/coronavirus/country/united-states?country=~USA" class="uri">https://ourworldindata.org/coronavirus/country/united-states?country=~USA</a>. Choose a state or region in the US and display the amounts of either hospitalizations or infections in a data viz. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.</p>
-<pre class="r"><code>1+2</code></pre>
-<pre><code>## [1] 3</code></pre>
-<pre class="r"><code>2*5</code></pre>
-<pre><code>## [1] 10</code></pre>
-<pre class="r"><code>5/3</code></pre>
-<pre><code>## [1] 1.666667</code></pre>
-<pre class="r"><code>(1+6+4)/5</code></pre>
-<pre><code>## [1] 2.2</code></pre>
+<pre class="r"><code> library(readxl)
+owid_covid_data&lt;-read_excel(&quot;Sprojects_files/owid-covid-data.xlsx&quot;)
+names(owid_covid_data)</code></pre>
+<pre><code>##  [1] &quot;iso_code&quot;                             
+##  [2] &quot;continent&quot;                            
+##  [3] &quot;location&quot;                             
+##  [4] &quot;date&quot;                                 
+##  [5] &quot;total_cases&quot;                          
+##  [6] &quot;new_cases&quot;                            
+##  [7] &quot;new_cases_smoothed&quot;                   
+##  [8] &quot;total_deaths&quot;                         
+##  [9] &quot;new_deaths&quot;                           
+## [10] &quot;new_deaths_smoothed&quot;                  
+## [11] &quot;total_cases_per_million&quot;              
+## [12] &quot;new_cases_per_million&quot;                
+## [13] &quot;new_cases_smoothed_per_million&quot;       
+## [14] &quot;total_deaths_per_million&quot;             
+## [15] &quot;new_deaths_per_million&quot;               
+## [16] &quot;new_deaths_smoothed_per_million&quot;      
+## [17] &quot;reproduction_rate&quot;                    
+## [18] &quot;icu_patients&quot;                         
+## [19] &quot;icu_patients_per_million&quot;             
+## [20] &quot;hosp_patients&quot;                        
+## [21] &quot;hosp_patients_per_million&quot;            
+## [22] &quot;weekly_icu_admissions&quot;                
+## [23] &quot;weekly_icu_admissions_per_million&quot;    
+## [24] &quot;weekly_hosp_admissions&quot;               
+## [25] &quot;weekly_hosp_admissions_per_million&quot;   
+## [26] &quot;new_tests&quot;                            
+## [27] &quot;total_tests&quot;                          
+## [28] &quot;total_tests_per_thousand&quot;             
+## [29] &quot;new_tests_per_thousand&quot;               
+## [30] &quot;new_tests_smoothed&quot;                   
+## [31] &quot;new_tests_smoothed_per_thousand&quot;      
+## [32] &quot;positive_rate&quot;                        
+## [33] &quot;tests_per_case&quot;                       
+## [34] &quot;tests_units&quot;                          
+## [35] &quot;total_vaccinations&quot;                   
+## [36] &quot;people_vaccinated&quot;                    
+## [37] &quot;people_fully_vaccinated&quot;              
+## [38] &quot;new_vaccinations&quot;                     
+## [39] &quot;new_vaccinations_smoothed&quot;            
+## [40] &quot;total_vaccinations_per_hundred&quot;       
+## [41] &quot;people_vaccinated_per_hundred&quot;        
+## [42] &quot;people_fully_vaccinated_per_hundred&quot;  
+## [43] &quot;new_vaccinations_smoothed_per_million&quot;
+## [44] &quot;stringency_index&quot;                     
+## [45] &quot;population&quot;                           
+## [46] &quot;population_density&quot;                   
+## [47] &quot;median_age&quot;                           
+## [48] &quot;aged_65_older&quot;                        
+## [49] &quot;aged_70_older&quot;                        
+## [50] &quot;gdp_per_capita&quot;                       
+## [51] &quot;extreme_poverty&quot;                      
+## [52] &quot;cardiovasc_death_rate&quot;                
+## [53] &quot;diabetes_prevalence&quot;                  
+## [54] &quot;female_smokers&quot;                       
+## [55] &quot;male_smokers&quot;                         
+## [56] &quot;handwashing_facilities&quot;               
+## [57] &quot;hospital_beds_per_thousand&quot;           
+## [58] &quot;life_expectancy&quot;                      
+## [59] &quot;human_development_index&quot;</code></pre>
+<div id="selecting-india" class="section level3">
+<h3>Selecting India</h3>
+<pre class="r"><code>Indiadata&lt;-subset(owid_covid_data,location==&quot;India&quot;)
+Date&lt;-Indiadata$date
+Infections&lt;-Indiadata$new_cases</code></pre>
+<pre class="r"><code>library(ggplot2)
+options(stringsAsFactors = FALSE)
+ggplot(data = Indiadata, aes(x = date, y = new_cases)) +
+  geom_point() +
+  labs(x = &quot;Date&quot;,
+    y = &quot;Number of Infections&quot;,
+    title = &quot;Data Visualization of Time Series of COVID Infections in India&quot;,
+    subtitle = &quot;                      Infections from 2020-01-30 to 2021-03-06&quot;)</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-3-1.png" width="672" /> ### Enhanced Visualization for Project 1 ### Selecting of the data</p>
+<pre class="r"><code>table(owid_covid_data$continent)</code></pre>
+<pre><code>## 
+##        Africa          Asia        Europe North America       Oceania 
+##         19220         17477         17680          8635          2080 
+## South America 
+##          4464</code></pre>
+<pre class="r"><code>Europedata&lt;-subset(owid_covid_data,continent==&quot;Europe&quot;)
+str(Europedata)</code></pre>
+<pre><code>## tibble[,59] [17,680 × 59] (S3: tbl_df/tbl/data.frame)
+##  $ iso_code                             : chr [1:17680] &quot;ALB&quot; &quot;ALB&quot; &quot;ALB&quot; &quot;ALB&quot; ...
+##  $ continent                            : chr [1:17680] &quot;Europe&quot; &quot;Europe&quot; &quot;Europe&quot; &quot;Europe&quot; ...
+##  $ location                             : chr [1:17680] &quot;Albania&quot; &quot;Albania&quot; &quot;Albania&quot; &quot;Albania&quot; ...
+##  $ date                                 : chr [1:17680] &quot;2020-02-25&quot; &quot;2020-02-26&quot; &quot;2020-02-27&quot; &quot;2020-02-28&quot; ...
+##  $ total_cases                          : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_cases                            : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_cases_smoothed                   : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ total_deaths                         : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_deaths                           : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_deaths_smoothed                  : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ total_cases_per_million              : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_cases_per_million                : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_cases_smoothed_per_million       : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ total_deaths_per_million             : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_deaths_per_million               : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ new_deaths_smoothed_per_million      : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ reproduction_rate                    : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ icu_patients                         : logi [1:17680] NA NA NA NA NA NA ...
+##  $ icu_patients_per_million             : logi [1:17680] NA NA NA NA NA NA ...
+##  $ hosp_patients                        : logi [1:17680] NA NA NA NA NA NA ...
+##  $ hosp_patients_per_million            : logi [1:17680] NA NA NA NA NA NA ...
+##  $ weekly_icu_admissions                : logi [1:17680] NA NA NA NA NA NA ...
+##  $ weekly_icu_admissions_per_million    : logi [1:17680] NA NA NA NA NA NA ...
+##  $ weekly_hosp_admissions               : logi [1:17680] NA NA NA NA NA NA ...
+##  $ weekly_hosp_admissions_per_million   : logi [1:17680] NA NA NA NA NA NA ...
+##  $ new_tests                            : num [1:17680] 8 5 4 1 8 3 2 5 6 8 ...
+##  $ total_tests                          : num [1:17680] 8 13 17 18 26 29 31 36 42 50 ...
+##  $ total_tests_per_thousand             : num [1:17680] 0.003 0.005 0.006 0.006 0.009 0.01 0.011 0.013 0.015 0.017 ...
+##  $ new_tests_per_thousand               : num [1:17680] 0.003 0.002 0.001 0 0.003 0.001 0.001 0.002 0.002 0.003 ...
+##  $ new_tests_smoothed                   : num [1:17680] NA NA NA NA NA NA NA 4 4 5 ...
+##  $ new_tests_smoothed_per_thousand      : num [1:17680] NA NA NA NA NA NA NA 0.001 0.001 0.002 ...
+##  $ positive_rate                        : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ tests_per_case                       : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ tests_units                          : chr [1:17680] &quot;tests performed&quot; &quot;tests performed&quot; &quot;tests performed&quot; &quot;tests performed&quot; ...
+##  $ total_vaccinations                   : logi [1:17680] NA NA NA NA NA NA ...
+##  $ people_vaccinated                    : logi [1:17680] NA NA NA NA NA NA ...
+##  $ people_fully_vaccinated              : logi [1:17680] NA NA NA NA NA NA ...
+##  $ new_vaccinations                     : logi [1:17680] NA NA NA NA NA NA ...
+##  $ new_vaccinations_smoothed            : logi [1:17680] NA NA NA NA NA NA ...
+##  $ total_vaccinations_per_hundred       : logi [1:17680] NA NA NA NA NA NA ...
+##  $ people_vaccinated_per_hundred        : logi [1:17680] NA NA NA NA NA NA ...
+##  $ people_fully_vaccinated_per_hundred  : logi [1:17680] NA NA NA NA NA NA ...
+##  $ new_vaccinations_smoothed_per_million: logi [1:17680] NA NA NA NA NA NA ...
+##  $ stringency_index                     : num [1:17680] 8.33 8.33 8.33 8.33 8.33 8.33 8.33 8.33 8.33 8.33 ...
+##  $ population                           : num [1:17680] 2877800 2877800 2877800 2877800 2877800 ...
+##  $ population_density                   : num [1:17680] 105 105 105 105 105 ...
+##  $ median_age                           : num [1:17680] 38 38 38 38 38 38 38 38 38 38 ...
+##  $ aged_65_older                        : num [1:17680] 13.2 13.2 13.2 13.2 13.2 ...
+##  $ aged_70_older                        : num [1:17680] 8.64 8.64 8.64 8.64 8.64 ...
+##  $ gdp_per_capita                       : num [1:17680] 11803 11803 11803 11803 11803 ...
+##  $ extreme_poverty                      : num [1:17680] 1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 1.1 ...
+##  $ cardiovasc_death_rate                : num [1:17680] 304 304 304 304 304 ...
+##  $ diabetes_prevalence                  : num [1:17680] 10.1 10.1 10.1 10.1 10.1 ...
+##  $ female_smokers                       : num [1:17680] 7.1 7.1 7.1 7.1 7.1 7.1 7.1 7.1 7.1 7.1 ...
+##  $ male_smokers                         : num [1:17680] 51.2 51.2 51.2 51.2 51.2 51.2 51.2 51.2 51.2 51.2 ...
+##  $ handwashing_facilities               : num [1:17680] NA NA NA NA NA NA NA NA NA NA ...
+##  $ hospital_beds_per_thousand           : num [1:17680] 2.89 2.89 2.89 2.89 2.89 2.89 2.89 2.89 2.89 2.89 ...
+##  $ life_expectancy                      : num [1:17680] 78.6 78.6 78.6 78.6 78.6 ...
+##  $ human_development_index              : num [1:17680] 0.795 0.795 0.795 0.795 0.795 0.795 0.795 0.795 0.795 0.795 ...</code></pre>
+</div>
+<div id="visualizing" class="section level3">
+<h3>Visualizing</h3>
+<pre class="r"><code>library(tidyverse)
+ggplot(data=Europedata,aes(location,total_cases))+
+  geom_bar(stat=&quot;identity&quot;)+theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
 </div>
 <div id="project-2" class="section level1">
 <h1>Project 2</h1>
-<p>Put numbers into variables, do simple math on the variables</p>
-<pre class="r"><code>a&lt;-1
-b&lt;-2
-a+b</code></pre>
-<pre><code>## [1] 3</code></pre>
-<pre class="r"><code>d&lt;-c(1,2,3)
-e&lt;-c(5,6,7)
-d+e</code></pre>
-<pre><code>## [1]  6  8 10</code></pre>
-<pre class="r"><code>d*e</code></pre>
-<pre><code>## [1]  5 12 21</code></pre>
-<pre class="r"><code>d/e</code></pre>
-<pre><code>## [1] 0.2000000 0.3333333 0.4285714</code></pre>
+<p>Use the provided data at the website ( <a href="https://ourworldindata.org/coronavirus/country/united-states?country=~USA" class="uri">https://ourworldindata.org/coronavirus/country/united-states?country=~USA</a>). Choose a state or region in the US and display the distribution of either hospitalizations or infections in a data viz. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.</p>
+<pre class="r"><code>Indiadata&lt;-subset(owid_covid_data,location==&quot;India&quot;)</code></pre>
+<pre class="r"><code>Infections&lt;-Indiadata$new_cases
+Date&lt;-Indiadata$date</code></pre>
+<div id="distrbution-visualization" class="section level3">
+<h3>Distrbution Visualization</h3>
+<pre class="r"><code>hist(Infections, main=&quot;Distribution of Infections of COVID 19 in India&quot;)
+lines(density(Infections,adjust=1),col=&quot;blue&quot;)</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
 </div>
 <div id="project-3" class="section level1">
 <h1>Project 3</h1>
-<p>Write code that will place the numbers 1 to 100 separately into a variable using for loop. Then, again using the seq function.</p>
-<pre class="r"><code># for loop solution
-# i becomes the number 1 to 100 at each step of the loop
-
-
-a &lt;- length(100) # make empty variable, set length to 100
-for (i in 1:100){
-  a[i] &lt;-i #assigns the number in i, to the ith index of a
-}
-
-print(a)</code></pre>
-<pre><code>##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
-##  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
-##  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54
-##  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
-##  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
-##  [91]  91  92  93  94  95  96  97  98  99 100</code></pre>
-<pre class="r"><code># for loop solution #2
-
-a&lt;-c() #create empty variable using combine command
-for (i in 1:100){
-  a&lt;-c(a,i) # keeps combining a with itself and the new number in i
-}
-print(a)</code></pre>
-<pre><code>##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
-##  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
-##  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54
-##  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
-##  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
-##  [91]  91  92  93  94  95  96  97  98  99 100</code></pre>
-<pre class="r"><code># seq solution
-a &lt;- seq(1,100,1) # look up help for seq using ?seq() in console
-print(a)</code></pre>
-<pre><code>##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
-##  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
-##  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54
-##  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
-##  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
-##  [91]  91  92  93  94  95  96  97  98  99 100</code></pre>
+<p>Use the provided data at the website (<a href="https://ourworldindata.org/coronavirus/country/united-states?country=~USA" class="uri">https://ourworldindata.org/coronavirus/country/united-states?country=~USA</a>). Choose a state or region in the US and display proportion by a grouping for any characteristics in the data. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.</p>
+<div id="selecting-the-data" class="section level3">
+<h3>Selecting the data</h3>
+<pre class="r"><code>mydata&lt;-subset(owid_covid_data, location==&quot;United States&quot; | location==&quot;Canada&quot;,select=c(total_cases,new_cases,total_deaths,icu_patients,total_vaccinations,people_vaccinated,people_fully_vaccinated,weekly_icu_admissions))</code></pre>
+<pre class="r"><code>library(ggplot2)
+plt &lt;- ggplot(mydata, aes(factor(icu_patients)))
+plt + geom_bar(aes(fill=factor(icu_patients)))</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
 </div>
 <div id="project-4" class="section level1">
 <h1>Project 4</h1>
-<p>And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.</p>
+<p>Use the provided data at the website (<a href="https://ourworldindata.org/coronavirus/country/united-states?country=~USA" class="uri">https://ourworldindata.org/coronavirus/country/united-states?country=~USA</a>). Choose a state or region in the US and display a set of associations with hospitalization or infection rates. You can choose the variables that you want to explore associations using these quantities. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.</p>
+<pre class="r"><code>Indiadata&lt;-subset(owid_covid_data,location==&quot;India&quot;)</code></pre>
+<div id="data-visualization-of-association" class="section level3">
+<h3>Data Visualization of Association</h3>
+<pre class="r"><code>library(&quot;car&quot;)
+scatterplot(new_cases_per_million ~ new_deaths_per_million, data = Indiadata)</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
 </div>
 <div id="project-5" class="section level1">
 <h1>Project 5</h1>
+<p>Visualizing Uncertainty Use the provided data at the website ( <a href="https://ourworldindata.org/coronavirus/country/united-states?country=~USA" class="uri">https://ourworldindata.org/coronavirus/country/united-states?country=~USA</a>). Choose a state or region in the US and display how the estimated infection rate trends over time and also display the uncertainty in estimating the true infection rate. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.</p>
+<div id="visualizing-of-rate-of-infection" class="section level3">
+<h3>Visualizing of rate of Infection</h3>
+<pre class="r"><code>library(ggplot2)
+library(scales)
+ggplot(Indiadata, aes(factor(date),new_cases_per_million, group =location , 
+                  color = location)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 1) +
+  geom_smooth() +
+  scale_color_brewer(name = &quot;Country&quot;, palette = &quot;Set1&quot;)+
+  xlab(&quot;Date&quot;) +
+  ylab(&quot;Rate of New Infection&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="visualizing-of-uncertainty-rate-of-infection" class="section level3">
+<h3>Visualizing of Uncertainty rate of Infection</h3>
+</div>
+<div id="plot-data" class="section level3">
+<h3>plot data</h3>
+<pre class="r"><code>library(ggplot2)
+
+x&lt;-factor(Indiadata$date)
+y1&lt;-Indiadata$new_cases_per_million
+y2&lt;-Indiadata$new_cases_smoothed_per_million
+ggplot(Indiadata, aes(date, y = Rate , color = variable)) + 
+    geom_point(aes(y = y1, col = &quot;Expected Rate&quot;)) + 
+    geom_point(aes(y = y2, col = &quot;Actual Rate&quot;))</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
 </div>
 <div id="project-6" class="section level1">
 <h1>Project 6</h1>
+<p>Create a new dataviz of a research interest of yours and/or a type of dataviz you want to try out. This can be of any type and will become a focus or highlight of your dataviz portfolio. Go through the design process in entirety and reflect on the story your dataviz is telling. Redesign if it is NOT telling the story you intend!</p>
+<div id="datavisualization-of-rideshare-in-newyork-city" class="section level3">
+<h3>Datavisualization of Rideshare in NewYork City</h3>
+<p>##Importation of Data ##Getting packages</p>
+<pre class="r"><code>library(ggplot2)
+library(ggthemes)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(scales)</code></pre>
+<pre class="r"><code>april &lt;- read.csv(&quot;uber-raw-data-apr14.csv&quot;)
+may&lt;- read.csv(&quot;uber-raw-data-may14.csv&quot;)
+june&lt;- read.csv(&quot;uber-raw-data-jun14.csv&quot;)
+july &lt;- read.csv(&quot;uber-raw-data-jul14.csv&quot;)
+august&lt;- read.csv(&quot;uber-raw-data-aug14.csv&quot;)
+september &lt;- read.csv(&quot;uber-raw-data-aug14.csv&quot;)</code></pre>
+<p>#Combinning the data into one dataset</p>
+<pre class="r"><code>mydata&lt;-rbind(april,may,june,july,august,september)</code></pre>
+<pre class="r"><code>mydata$Date.Time &lt;- as.POSIXct(mydata$Date.Time, format = &quot;%m/%d/%Y %H:%M:%S&quot;)
+mydata$Time &lt;- format(as.POSIXct(mydata$Date.Time, format = &quot;%m/%d/%Y %H:%M:%S&quot;), format=&quot;%H:%M:%S&quot;)
+mydata$Date.Time &lt;-ymd_hms(mydata$Date.Time)
+mydata$day &lt;- factor(day(mydata$Date.Time))
+mydata$month &lt;- factor(month(mydata$Date.Time, label = TRUE))
+mydata$year &lt;- factor(year(mydata$Date.Time))
+mydata$dayofweek &lt;- factor(wday(mydata$Date.Time, label = TRUE))
+mydata$hour &lt;- factor(hour(hms(mydata$Time)))
+mydata$minute &lt;- factor(minute(hms(mydata$Time)))
+mydata$second &lt;- factor(second(hms(mydata$Time)))</code></pre>
+<pre class="r"><code>hour_data &lt;- mydata %&gt;%
+           group_by(hour) %&gt;%
+               dplyr::summarize(Total = n()) 
+ggplot(hour_data, aes(hour, Total)) + 
+        geom_bar( stat = &quot;identity&quot;, fill = &quot;yellow&quot;, color = &quot;blue&quot;) +
+           ggtitle(&quot;Trips Every Hour&quot;) +
+            theme(legend.position = &quot;none&quot;) +
+            scale_y_continuous(labels = comma)</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<pre class="r"><code>month_hour &lt;- mydata %&gt;%
+          group_by(month, hour) %&gt;%
+             dplyr::summarize(Total = n())
+ggplot(month_hour, aes(hour, Total, fill = month)) + 
+       geom_bar( stat = &quot;identity&quot;) +
+          ggtitle(&quot;Trips by Hour and Month&quot;) +
+           scale_y_continuous(labels = comma)</code></pre>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
+</div>
 </div>
 <div id="final-project" class="section level1">
 <h1>Final Project</h1>
@@ -455,7 +651,7 @@ pickup_frequency[which.max(pickup_frequency$Pickups),]</code></pre>
 <pre><code>##   Weekday Pickups
 ## 4  Sunday  490180</code></pre>
 <pre class="r"><code>ggplot(data=pickup_frequency, aes(x = Weekday, y=Pickups, fill=Weekday))+geom_bar(stat = &quot;identity&quot;)+ggtitle(label = &quot;Weekday Pickup Comparison&quot;)+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = &quot;bold&quot;))+xlab(&quot;Weekdays&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <pre class="r"><code>ride_share$Month&lt;-months(as.POSIXct(ride_share$Date, format=&quot;%m/%d/%Y&quot;))
 weekly_trend &lt;- subset(ride_share, select = c(Weekday, Month))
 weekly_trend&lt;- ddply(weekly_trend, .(weekly_trend$Weekday, weekly_trend$Month), nrow)
@@ -467,13 +663,13 @@ weekly_trend$Month&lt;- factor(weekly_trend$Month, levels = c(&quot;April&quot;,
 weekly_trend&lt;-weekly_trend[with(weekly_trend, order(Month, Weekday)),]</code></pre>
 <pre class="r"><code>ggplot(weekly_trend,aes(Weekday, Pickups)) + 
 geom_bar(aes(fill = Month),stat = &quot;identity&quot;,position = &quot;dodge&quot;)+scale_fill_brewer(palette = &quot;Accent&quot;) +ggtitle(label = &quot;Weekday Pickup Each Month&quot;)+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = &quot;bold&quot;))+xlab(&quot;Weekdays&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <pre class="r"><code>mpickups&lt;-as.data.frame(table(ride_share$Month))
 names(mpickups)&lt;- c(&quot;Month&quot;,&quot;Pickups&quot;)
 mpickups$Month&lt;- factor(mpickups$Month, levels = c(&quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;,&quot;August&quot;,&quot;September&quot;))
 mpickups&lt;-mpickups[order(mpickups$Month),]
 ggplot(mpickups, aes(x=Month, y=Pickups, group=1))+geom_point(color=&quot;dark green&quot;)+geom_line(color=&quot;orange&quot;)+ggtitle(label = &quot;Trend over the Months by Month&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <pre class="r"><code>monthly_trend &lt;- subset(ride_share, select = c(Date, Month))
 monthly_trend&lt;- ddply(monthly_trend, .(monthly_trend$Date, monthly_trend$Month), nrow)
 names(monthly_trend) &lt;- c(&quot;Date&quot;, &quot;Month&quot;,&quot;Pickups&quot;)
@@ -486,11 +682,11 @@ daily_trend$Time &lt;- as.character.Date(daily_trend$Time, format=&quot;%H&quot;
 daily_trend&lt;- ddply(daily_trend, .(daily_trend$Time, daily_trend$Month), nrow)
 names(daily_trend)&lt;- c(&quot;Hour&quot;,&quot;Month&quot;,&quot;Pickups&quot;)</code></pre>
 <pre class="r"><code>ggplot(daily_trend, aes(Hour, Pickups, fill=Month))+geom_bar(stat = &quot;identity&quot;)+ggtitle(label = &quot;Trend Over Time of the Day&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+xlab(&quot;Hour&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(daily_trend, aes(Hour, Pickups, group=Month))+geom_line(aes(color=Month))+ggtitle(label = &quot;Trend Over Time of the Day&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+xlab(&quot;Hour&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(monthly_trend, aes(Date, Pickups))+geom_line(aes(color=Month))+ geom_smooth(method = &#39;loess&#39;,color=&quot;red&quot;)+scale_x_date(breaks = date_breaks(&quot;9 days&quot;))+ggtitle(label = &quot;Trend over the Months by Date&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;),axis.text.x = element_text(angle=90))+ylab(&quot;Number of Pickups&quot;)</code></pre>
-<p><img src="Sprojects_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="Sprojects_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 </div>
 
 

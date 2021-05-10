@@ -18,74 +18,186 @@ These are the collections of the projects for DS 5339 - Data Visualization. Proj
 
 # Project 1
 Use the provided data at the website <https://ourworldindata.org/coronavirus/country/united-states?country=~USA>. Choose a state or region in the US and display the amounts of either hospitalizations or infections in a data viz. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.
-
-
+ 
+```{r}
+ library(readxl)
+owid_covid_data<-read_excel("Sprojects_files/owid-covid-data.xlsx")
+names(owid_covid_data)
+```
+### Selecting India 
+```{r}
+Indiadata<-subset(owid_covid_data,location=="India")
+Date<-Indiadata$date
+Infections<-Indiadata$new_cases
+```
 
 ```{r}
-1+2
-2*5
-5/3
-(1+6+4)/5
+library(ggplot2)
+options(stringsAsFactors = FALSE)
+ggplot(data = Indiadata, aes(x = date, y = new_cases)) +
+  geom_point() +
+  labs(x = "Date",
+    y = "Number of Infections",
+    title = "Data Visualization of Time Series of COVID Infections in India",
+    subtitle = "                      Infections from 2020-01-30 to 2021-03-06")
+```
+### Enhanced Visualization for Project 1
+### Selecting of the data
+```{r}
+table(owid_covid_data$continent)
+Europedata<-subset(owid_covid_data,continent=="Europe")
+str(Europedata)
+```
 
+### Visualizing 
+```{r}
+library(tidyverse)
+ggplot(data=Europedata,aes(location,total_cases))+
+  geom_bar(stat="identity")+theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
 ```
 
 # Project 2
-
-Put numbers into variables, do simple math on the variables
+Use the provided data at the website ( https://ourworldindata.org/coronavirus/country/united-states?country=~USA). Choose a state or region in the US and display the distribution of either hospitalizations or infections in a data viz. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of 
+region, but instead the quality of the dataviz.
 
 ```{r}
-a<-1
-b<-2
-a+b
+Indiadata<-subset(owid_covid_data,location=="India")
+```
 
-d<-c(1,2,3)
-e<-c(5,6,7)
-d+e
-d*e
-d/e
+```{r}
+Infections<-Indiadata$new_cases
+Date<-Indiadata$date
+```
+### Distrbution Visualization 
 
+```{r}
+hist(Infections, main="Distribution of Infections of COVID 19 in India")
+lines(density(Infections,adjust=1),col="blue")
 ```
 
 # Project 3
 
-Write code that will place the numbers 1 to 100 separately into a variable using for loop. Then, again using the seq function.
+Use the provided data at the website (https://ourworldindata.org/coronavirus/country/united-states?country=~USA). Choose a state or region in the US and display proportion by a grouping for any characteristics in the data. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.
 
+### Selecting the data
 ```{r}
-# for loop solution
-# i becomes the number 1 to 100 at each step of the loop
-
-
-a <- length(100) # make empty variable, set length to 100
-for (i in 1:100){
-  a[i] <-i #assigns the number in i, to the ith index of a
-}
-
-print(a)
-
-# for loop solution #2
-
-a<-c() #create empty variable using combine command
-for (i in 1:100){
-  a<-c(a,i) # keeps combining a with itself and the new number in i
-}
-print(a)
-
-# seq solution
-a <- seq(1,100,1) # look up help for seq using ?seq() in console
-print(a)
-
+mydata<-subset(owid_covid_data, location=="United States" | location=="Canada",select=c(total_cases,new_cases,total_deaths,icu_patients,total_vaccinations,people_vaccinated,people_fully_vaccinated,weekly_icu_admissions))
 ```
+```{r}
+library(ggplot2)
+plt <- ggplot(mydata, aes(factor(icu_patients)))
+plt + geom_bar(aes(fill=factor(icu_patients)))
+```
+
 
 # Project 4
 
-And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.
+Use the provided data at the  website (https://ourworldindata.org/coronavirus/country/united-states?country=~USA). Choose a state or region in the US and display a set of associations with hospitalization or infection rates. You can choose the variables that you want to explore associations using these quantities. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.
+
+```{r}
+Indiadata<-subset(owid_covid_data,location=="India")
+```
+
+### Data Visualization of Association 
+```{r}
+library("car")
+scatterplot(new_cases_per_million ~ new_deaths_per_million, data = Indiadata)
+```
 
 # Project 5
+Visualizing Uncertainty
+Use the provided data at the website ( https://ourworldindata.org/coronavirus/country/united-states?country=~USA). Choose a state or region in the US and display how the estimated infection rate trends over time and also display the uncertainty in estimating the true infection rate. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.
+
+### Visualizing of rate of Infection 
+```{r}
+library(ggplot2)
+library(scales)
+ggplot(Indiadata, aes(factor(date),new_cases_per_million, group =location , 
+                  color = location)) +
+  geom_line(size = 1, alpha = 0.8) +
+  geom_point(size = 1) +
+  geom_smooth() +
+  scale_color_brewer(name = "Country", palette = "Set1")+
+  xlab("Date") +
+  ylab("Rate of New Infection") +
+  theme_minimal()
+```
+
+### Visualizing of Uncertainty rate of Infection 
+### plot data
+
+```{r}
+library(ggplot2)
+
+x<-factor(Indiadata$date)
+y1<-Indiadata$new_cases_per_million
+y2<-Indiadata$new_cases_smoothed_per_million
+ggplot(Indiadata, aes(date, y = Rate , color = variable)) + 
+    geom_point(aes(y = y1, col = "Expected Rate")) + 
+    geom_point(aes(y = y2, col = "Actual Rate"))
+```
 
 # Project 6
+ Create a new dataviz of a research interest of yours and/or a type of dataviz you want to try out. This can be of any type and will become a focus or highlight of your dataviz portfolio. Go through the design process in entirety and reflect on the story your dataviz is telling. Redesign if it is NOT telling the story you intend!
+
+### Datavisualization of Rideshare in NewYork City
+
+##Importation of Data 
+##Getting packages
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+library(DT)
+library(scales)
+```
+```{r}
+april <- read.csv("uber-raw-data-apr14.csv")
+may<- read.csv("uber-raw-data-may14.csv")
+june<- read.csv("uber-raw-data-jun14.csv")
+july <- read.csv("uber-raw-data-jul14.csv")
+august<- read.csv("uber-raw-data-aug14.csv")
+september <- read.csv("uber-raw-data-aug14.csv")
+```
+
+#Combinning the data into one dataset
+```{r}
+mydata<-rbind(april,may,june,july,august,september)
+```
+```{r}
+mydata$Date.Time <- as.POSIXct(mydata$Date.Time, format = "%m/%d/%Y %H:%M:%S")
+mydata$Time <- format(as.POSIXct(mydata$Date.Time, format = "%m/%d/%Y %H:%M:%S"), format="%H:%M:%S")
+mydata$Date.Time <-ymd_hms(mydata$Date.Time)
+mydata$day <- factor(day(mydata$Date.Time))
+mydata$month <- factor(month(mydata$Date.Time, label = TRUE))
+mydata$year <- factor(year(mydata$Date.Time))
+mydata$dayofweek <- factor(wday(mydata$Date.Time, label = TRUE))
+mydata$hour <- factor(hour(hms(mydata$Time)))
+mydata$minute <- factor(minute(hms(mydata$Time)))
+mydata$second <- factor(second(hms(mydata$Time)))
+```
+
+```{r}
+hour_data <- mydata %>%
+           group_by(hour) %>%
+               dplyr::summarize(Total = n()) 
+ggplot(hour_data, aes(hour, Total)) + 
+        geom_bar( stat = "identity", fill = "yellow", color = "blue") +
+           ggtitle("Trips Every Hour") +
+            theme(legend.position = "none") +
+            scale_y_continuous(labels = comma)
+month_hour <- mydata %>%
+          group_by(month, hour) %>%
+             dplyr::summarize(Total = n())
+ggplot(month_hour, aes(hour, Total, fill = month)) + 
+       geom_bar( stat = "identity") +
+          ggtitle("Trips by Hour and Month") +
+           scale_y_continuous(labels = comma)
+```
 
 # Final Project
-
 
 ```{r}
 library(ggplot2)
