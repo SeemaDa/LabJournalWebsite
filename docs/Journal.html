@@ -456,6 +456,74 @@ print(a)</code></pre>
 <h1>Replace this with problem 4</h1>
 <p>And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.</p>
 </div>
+<div id="final-project" class="section level1">
+<h1>Final Project</h1>
+<pre class="r"><code>library(ggplot2)
+require(ggplot2)
+library(plyr)
+library(RColorBrewer)
+require(scales)
+require(RColorBrewer) </code></pre>
+<pre class="r"><code>ride_share &lt;- read.csv(&quot;~/Desktop/Data/ride_share.csv&quot;)</code></pre>
+<pre class="r"><code>ride_share&lt;-ride_share[order(as.Date(ride_share$Date.Time, format=&quot;%m/%d/%Y&quot;)),]</code></pre>
+<pre class="r"><code>pickup_time &lt;- format(as.POSIXct(strptime(ride_share$Date.Time,&quot;%m/%d/%Y %H:%M:%S&quot;,tz=&quot;&quot;)), format=&quot;%H:%M:%S&quot;)
+
+pickup_date &lt;- format(as.POSIXct(strptime(ride_share$Date.Time,&quot;%m/%d/%Y %H:%M:%S&quot;,tz=&quot;&quot;)), format=&quot;%m/%d/%Y&quot;)</code></pre>
+<pre class="r"><code>ride_share$Time &lt;- pickup_time
+ride_share$Date &lt;- pickup_date
+ride_share$Weekday &lt;- weekdays(as.Date(ride_share$Date.Time,format=&quot;%m/%d/%Y&quot;))</code></pre>
+<pre class="r"><code>pickup_frequency&lt;- as.data.frame(table(ride_share$Weekday))
+names(pickup_frequency)&lt;- c(&quot;Weekday&quot;,&quot;Pickups&quot;)
+pickup_frequency$Weekday&lt;- factor(pickup_frequency$Weekday, levels=c(&quot;Monday&quot;,
+    &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;,&quot;Sunday&quot;))
+pickup_frequency&lt;-pickup_frequency[order(pickup_frequency$Weekday),]
+pickup_frequency[which.max(pickup_frequency$Pickups),]</code></pre>
+<pre><code>##    Weekday Pickups
+## 5 Thursday  755145</code></pre>
+<pre class="r"><code>pickup_frequency[which.max(pickup_frequency$Pickups),]</code></pre>
+<pre><code>##    Weekday Pickups
+## 5 Thursday  755145</code></pre>
+<pre class="r"><code>pickup_frequency[which.min(pickup_frequency$Pickups),]</code></pre>
+<pre><code>##   Weekday Pickups
+## 4  Sunday  490180</code></pre>
+<pre class="r"><code>ggplot(data=pickup_frequency, aes(x = Weekday, y=Pickups, fill=Weekday))+geom_bar(stat = &quot;identity&quot;)+ggtitle(label = &quot;Weekday Pickup Comparison&quot;)+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = &quot;bold&quot;))+xlab(&quot;Weekdays&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>ride_share$Month&lt;-months(as.POSIXct(ride_share$Date, format=&quot;%m/%d/%Y&quot;))
+weekly_trend &lt;- subset(ride_share, select = c(Weekday, Month))
+weekly_trend&lt;- ddply(weekly_trend, .(weekly_trend$Weekday, weekly_trend$Month), nrow)
+names(weekly_trend) &lt;- c(&quot;Weekday&quot;, &quot;Month&quot;,&quot;Pickups&quot;)
+
+weekly_trend$Weekday &lt;- factor(weekly_trend$Weekday, levels=c(&quot;Monday&quot;,
+    &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;,&quot;Sunday&quot;))
+weekly_trend$Month&lt;- factor(weekly_trend$Month, levels = c(&quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;,&quot;August&quot;,&quot;September&quot;))
+weekly_trend&lt;-weekly_trend[with(weekly_trend, order(Month, Weekday)),]</code></pre>
+<pre class="r"><code>ggplot(weekly_trend,aes(Weekday, Pickups)) + 
+geom_bar(aes(fill = Month),stat = &quot;identity&quot;,position = &quot;dodge&quot;)+scale_fill_brewer(palette = &quot;Accent&quot;) +ggtitle(label = &quot;Weekday Pickup Each Month&quot;)+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = &quot;bold&quot;))+xlab(&quot;Weekdays&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r"><code>mpickups&lt;-as.data.frame(table(ride_share$Month))
+names(mpickups)&lt;- c(&quot;Month&quot;,&quot;Pickups&quot;)
+mpickups$Month&lt;- factor(mpickups$Month, levels = c(&quot;April&quot;, &quot;May&quot;, &quot;June&quot;, &quot;July&quot;,&quot;August&quot;,&quot;September&quot;))
+mpickups&lt;-mpickups[order(mpickups$Month),]
+ggplot(mpickups, aes(x=Month, y=Pickups, group=1))+geom_point(color=&quot;dark green&quot;)+geom_line(color=&quot;orange&quot;)+ggtitle(label = &quot;Trend over the Months by Month&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>monthly_trend &lt;- subset(ride_share, select = c(Date, Month))
+monthly_trend&lt;- ddply(monthly_trend, .(monthly_trend$Date, monthly_trend$Month), nrow)
+names(monthly_trend) &lt;- c(&quot;Date&quot;, &quot;Month&quot;,&quot;Pickups&quot;)
+monthly_trend$Date &lt;- as.character.Date(monthly_trend$Date)
+monthly_trend$Date &lt;-as.Date(monthly_trend$Date, format = &quot;%m/%d/%Y&quot;)</code></pre>
+<pre class="r"><code>daily_trend &lt;- subset(ride_share, select = c(Time, Month))
+H&lt;-format(as.POSIXct(strptime(daily_trend$Time, &quot;%H:%M:%S&quot;, tz=&quot;&quot;)), format=&quot;%H&quot;)
+daily_trend$Time &lt;- H
+daily_trend$Time &lt;- as.character.Date(daily_trend$Time, format=&quot;%H&quot;)
+daily_trend&lt;- ddply(daily_trend, .(daily_trend$Time, daily_trend$Month), nrow)
+names(daily_trend)&lt;- c(&quot;Hour&quot;,&quot;Month&quot;,&quot;Pickups&quot;)</code></pre>
+<pre class="r"><code>ggplot(daily_trend, aes(Hour, Pickups, fill=Month))+geom_bar(stat = &quot;identity&quot;)+ggtitle(label = &quot;Trend Over Time of the Day&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+xlab(&quot;Hour&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(daily_trend, aes(Hour, Pickups, group=Month))+geom_line(aes(color=Month))+ggtitle(label = &quot;Trend Over Time of the Day&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;))+xlab(&quot;Hour&quot;)+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(monthly_trend, aes(Date, Pickups))+geom_line(aes(color=Month))+ geom_smooth(method = &#39;loess&#39;,color=&quot;red&quot;)+scale_x_date(breaks = date_breaks(&quot;9 days&quot;))+ggtitle(label = &quot;Trend over the Months by Date&quot;)+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = &quot;bold&quot;),axis.text.x = element_text(angle=90))+ylab(&quot;Number of Pickups&quot;)</code></pre>
+<p><img src="Journal_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+</div>
 
 
 

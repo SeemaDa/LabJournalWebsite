@@ -126,3 +126,105 @@ print(a)
 # Replace this with problem 4
 
 And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.
+
+
+# Final Project
+
+
+```{r}
+library(ggplot2)
+require(ggplot2)
+library(plyr)
+library(RColorBrewer)
+require(scales)
+require(RColorBrewer) 
+```
+
+```{r}
+ride_share <- read.csv("~/Desktop/Data/ride_share.csv")
+```
+
+```{r}
+ride_share<-ride_share[order(as.Date(ride_share$Date.Time, format="%m/%d/%Y")),]
+```
+```{r}
+pickup_time <- format(as.POSIXct(strptime(ride_share$Date.Time,"%m/%d/%Y %H:%M:%S",tz="")), format="%H:%M:%S")
+
+pickup_date <- format(as.POSIXct(strptime(ride_share$Date.Time,"%m/%d/%Y %H:%M:%S",tz="")), format="%m/%d/%Y")
+```
+```{r}
+ride_share$Time <- pickup_time
+ride_share$Date <- pickup_date
+ride_share$Weekday <- weekdays(as.Date(ride_share$Date.Time,format="%m/%d/%Y"))
+```
+
+```{r}
+pickup_frequency<- as.data.frame(table(ride_share$Weekday))
+names(pickup_frequency)<- c("Weekday","Pickups")
+pickup_frequency$Weekday<- factor(pickup_frequency$Weekday, levels=c("Monday",
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"))
+pickup_frequency<-pickup_frequency[order(pickup_frequency$Weekday),]
+pickup_frequency[which.max(pickup_frequency$Pickups),]
+pickup_frequency[which.max(pickup_frequency$Pickups),]
+pickup_frequency[which.min(pickup_frequency$Pickups),]
+```
+
+
+```{r}
+ggplot(data=pickup_frequency, aes(x = Weekday, y=Pickups, fill=Weekday))+geom_bar(stat = "identity")+ggtitle(label = "Weekday Pickup Comparison")+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = "bold"))+xlab("Weekdays")+ylab("Number of Pickups")
+```
+```{r}
+ride_share$Month<-months(as.POSIXct(ride_share$Date, format="%m/%d/%Y"))
+weekly_trend <- subset(ride_share, select = c(Weekday, Month))
+weekly_trend<- ddply(weekly_trend, .(weekly_trend$Weekday, weekly_trend$Month), nrow)
+names(weekly_trend) <- c("Weekday", "Month","Pickups")
+
+weekly_trend$Weekday <- factor(weekly_trend$Weekday, levels=c("Monday",
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"))
+weekly_trend$Month<- factor(weekly_trend$Month, levels = c("April", "May", "June", "July","August","September"))
+weekly_trend<-weekly_trend[with(weekly_trend, order(Month, Weekday)),]
+```
+
+```{r}
+ggplot(weekly_trend,aes(Weekday, Pickups)) + 
+geom_bar(aes(fill = Month),stat = "identity",position = "dodge")+scale_fill_brewer(palette = "Accent") +ggtitle(label = "Weekday Pickup Each Month")+theme_minimal()+theme(plot.title = element_text(hjust = 0.5, lineheight = 0.8, face = "bold"))+xlab("Weekdays")+ylab("Number of Pickups")
+```
+
+```{r}
+mpickups<-as.data.frame(table(ride_share$Month))
+names(mpickups)<- c("Month","Pickups")
+mpickups$Month<- factor(mpickups$Month, levels = c("April", "May", "June", "July","August","September"))
+mpickups<-mpickups[order(mpickups$Month),]
+ggplot(mpickups, aes(x=Month, y=Pickups, group=1))+geom_point(color="dark green")+geom_line(color="orange")+ggtitle(label = "Trend over the Months by Month")+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = "bold"))+ylab("Number of Pickups")
+```
+
+```{r}
+
+monthly_trend <- subset(ride_share, select = c(Date, Month))
+monthly_trend<- ddply(monthly_trend, .(monthly_trend$Date, monthly_trend$Month), nrow)
+names(monthly_trend) <- c("Date", "Month","Pickups")
+monthly_trend$Date <- as.character.Date(monthly_trend$Date)
+monthly_trend$Date <-as.Date(monthly_trend$Date, format = "%m/%d/%Y")
+```
+
+```{r}
+daily_trend <- subset(ride_share, select = c(Time, Month))
+H<-format(as.POSIXct(strptime(daily_trend$Time, "%H:%M:%S", tz="")), format="%H")
+daily_trend$Time <- H
+daily_trend$Time <- as.character.Date(daily_trend$Time, format="%H")
+daily_trend<- ddply(daily_trend, .(daily_trend$Time, daily_trend$Month), nrow)
+names(daily_trend)<- c("Hour","Month","Pickups")
+```
+
+```{r}
+ggplot(daily_trend, aes(Hour, Pickups, fill=Month))+geom_bar(stat = "identity")+ggtitle(label = "Trend Over Time of the Day")+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = "bold"))+xlab("Hour")+ylab("Number of Pickups")
+```
+
+
+```{r}
+ggplot(daily_trend, aes(Hour, Pickups, group=Month))+geom_line(aes(color=Month))+ggtitle(label = "Trend Over Time of the Day")+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = "bold"))+xlab("Hour")+ylab("Number of Pickups")
+```
+
+```{r}
+ggplot(monthly_trend, aes(Date, Pickups))+geom_line(aes(color=Month))+ geom_smooth(method = 'loess',color="red")+scale_x_date(breaks = date_breaks("9 days"))+ggtitle(label = "Trend over the Months by Date")+theme_minimal()+theme(plot.title = element_text(hjust=0.5, lineheight = .8, face = "bold"),axis.text.x = element_text(angle=90))+ylab("Number of Pickups")
+```
