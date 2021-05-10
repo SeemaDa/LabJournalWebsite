@@ -1,5 +1,5 @@
 ---
-title: "MyLabJournal"
+title: "Seema Dalal Portfolio"
 output: html_document
 ---
 
@@ -17,27 +17,23 @@ output: html_document
 <div class="row" style="padding-top: 30px;">
 <div class="col-sm-6">
 
-# **My Lab Journal**
+# **Profile**
 
-This is a template example for lab journaling. Students in Matt Crump's Human Cognition and Performance Lab will use this template to learn R, and other things. Students can replace this text with more fun things. People not in my lab can use this too.
+I am a Graduate Student at the Mathematics and Statisitics Department of The University of Texas at El Paso. My research areas are Machine learning, Data Visualization, Artificial Intelligence and Statistical Analysis. I am looking out for opportunites in the industry of data science.
 
-## How to use
 
-1. fork the repo for this website and follow instructions on read me to get set up. [https://github.com/CrumpLab/LabJournalWebsite](https://github.com/CrumpLab/LabJournalWebsite)
 
-2. Blog/journal what you are doing in R, by editing the Journal.Rmd. See the [Journal page](https://crumplab.github.io/LabJournalWebsite/Journal.html) for an example of what to do to get started learning R.
-
-3. See the [links page](https://crumplab.github.io/LabJournalWebsite/Links.html) for lots of helpful links on learning R.
-
-4. Change everything to make it your own.
+![](/Users/mbq/Desktop/Seema_Github/SeemaDalalPortfolio/images/seema.png )
 
 
 </div>
 <div class="col-sm-6">
 
-### [Crump Lab: Human Cognition and Performance](https://crumplab.github.io)
+### Thought about Data Visualization
 
-<a href = "https://crumplab.github.io">
-![](images/logo.png)
+With the advent of Data science and the world being driven by data, It has become very imperative to understand data, analyze data and make meaningful deductions from it. However the person who works on the data must make meaning from the data and also communicate the findings to most often an audience who mostly have no knowledge about the values or tables that one get but they will rather appreciate visuals this is when Data Visualization comes in. Data visualization is the visual presentation of data or information. The goal of data visualization is to communicate data or information clearly and effectively to readers. Typically, data is visualized in the form of a chart, info-graphic, diagram or map.  The field of data visualization combines both art and data science. While a data visualization can be creative and pleasing to look at, it should also be functional in its visual communication of the data Using visuals to understand data has been around for a very long time, people used maps, graphs and pie charts way back in the 17th century to understand data, these visualization had limitation because one could not use for large data sets. With the invention of computers that enables one to process large data, visualization has also evolved with time. About two decades one could not fathom having a career in Data Visualization but today it is thing and people are in it, the research to be done in this area is enormous.
 </a>
 </div>
+
+
+

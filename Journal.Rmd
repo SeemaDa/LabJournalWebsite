@@ -17,8 +17,9 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 These are the collections of the projects for DS 5339 - Data Visualization. Projects 1 to Projects 6 are weekly Projects, whiles Final Project is the semester project done for a presentation.
 
 # Project 1
+Use the provided data at the website <https://ourworldindata.org/coronavirus/country/united-states?country=~USA>. Choose a state or region in the US and display the amounts of either hospitalizations or infections in a data viz. I am not going to assign a specific region or state since I want everyone to create a unique dataviz. I will not grade you on your selection of region, but instead the quality of the dataviz.
 
-Do simple math with numbers, addition, subtraction, multiplication, division
+
 
 ```{r}
 1+2
